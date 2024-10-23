@@ -7,6 +7,12 @@ local function is_dark()
     handle:close()
     return result:match("true")
   end
+  if vim.fn.has("linux") == 1 then
+    local handle = io.popen("gsettings get org.gnome.desktop.interface color-scheme")
+    local result = handle:read("*a")
+    handle:close()
+    return result:match("dark")
+  end
   return true
 end
 
@@ -28,7 +34,7 @@ return {
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = select_theme("papercolor", "nord"),
+      colorscheme = select_theme("PaperColor", "nord"),
     },
   },
 }
