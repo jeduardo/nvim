@@ -5,13 +5,14 @@ local function is_dark()
       io.popen('osascript -e "tell application \\"System Events\\" to tell appearance preferences to return dark mode"')
     local result = handle:read("*a")
     handle:close()
-    return result:match("true")
+    vim.api.nvim_err_writeln(vim.fn)
+    return result and result:match("true") and true
   end
   if vim.fn.has("linux") == 1 then
     local handle = io.popen("gsettings get org.gnome.desktop.interface color-scheme")
     local result = handle:read("*a")
     handle:close()
-    return result:match("dark")
+    return result and result:match("dark") or true
   end
   return true
 end
