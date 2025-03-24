@@ -9,7 +9,7 @@ end
 
 local function is_dark()
   local osname = vim.loop.os_uname().sysname
-  if osname:match("Mac") then
+  if osname:match("Darwin") then
     -- macOS-specific check
     local handle =
       io.popen('osascript -e "tell application \\"System Events\\" to tell appearance preferences to return dark mode"')
