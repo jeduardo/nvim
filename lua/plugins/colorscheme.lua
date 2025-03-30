@@ -42,7 +42,7 @@ end
 
 return {
   -- Add themes
-  { "nordtheme/vim", "NLKNguyen/papercolor-theme" },
+  { "nordtheme/vim", "NLKNguyen/papercolor-theme", "AlexvZyl/nordic.nvim" },
 
   -- Configure LazyVim to dynamically select the colorscheme
   {
