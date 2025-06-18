@@ -7,8 +7,48 @@ local function isPatternMatch(str, pattern)
   return str:match(pattern) ~= nil
 end
 
+local function is_android()
+  -- Check if we're running on Android
+  local handle = io.popen("getprop ro.build.version.release 2>/dev/null")
+  if handle then
+    local result = handle:read(BUF_SIZE)
+    handle:close()
+    -- If getprop returns anything, we're likely on Android
+    return result ~= nil and result ~= ""
+  end
+  
+  -- Alternative check: look for Android-specific paths
+  local android_paths = {
+    "/system/build.prop",
+    "/system/bin/getprop",
+    "/data/data"
+  }
+  
+  for _, path in ipairs(android_paths) do
+    local file = io.open(path, "r")
+    if file then
+      file:close()
+      return true
+    end
+  end
+  
+  -- Check environment variables that might indicate Android/Termux
+  if os.getenv("ANDROID_DATA") or os.getenv("TERMUX_VERSION") then
+    return true
+  end
+  
+  return false
+end
+
 local function is_dark()
   local osname = vim.loop.os_uname().sysname
+  
+  -- Check for Android first (before general Linux check)
+  if osname:match("Linux") and is_android() then
+    -- Android detected - return dark theme
+    return true
+  end
+  
   if osname:match("Darwin") then
     -- macOS-specific check
     local handle =
@@ -19,7 +59,9 @@ local function is_dark()
       return isPatternMatch(result, "true")
     end
   end
+  
   if osname:match("Linux") then
+    -- Regular Linux (non-Android) check
     local handle = io.popen("gsettings get org.gnome.desktop.interface color-scheme")
     if handle then
       local result = handle:read(BUF_SIZE)
@@ -27,6 +69,7 @@ local function is_dark()
       return isPatternMatch(result, "dark")
     end
   end
+  
   -- Default to returning true, assuming that a light background is an exception
   return true
 end
