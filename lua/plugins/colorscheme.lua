@@ -41,6 +41,14 @@ local function is_android()
 end
 
 local function is_dark()
+  local forced = os.getenv("NVIM_THEME")
+  if forced then
+    local v = forced:lower()
+    if v == "light" then
+      return false
+    end
+  end
+
   local osname = vim.loop.os_uname().sysname
 
   -- Check for Android first (before general Linux check)
