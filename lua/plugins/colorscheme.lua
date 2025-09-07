@@ -46,6 +46,8 @@ local function is_dark()
     local v = forced:lower()
     if v == "light" then
       return false
+    else
+      return true
     end
   end
 
@@ -74,7 +76,10 @@ local function is_dark()
     if handle then
       local result = handle:read(BUF_SIZE)
       handle:close()
-      return not isPatternMatch(result, "light")
+      -- result will be 'prefer-light' or 'default' for a light theme, so
+      -- it's easier to check for just the string dark in the 'prefer-dark'
+      -- result
+      return isPatternMatch(result, "dark")
     end
   end
 
