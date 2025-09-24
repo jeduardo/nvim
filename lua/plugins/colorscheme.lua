@@ -92,7 +92,7 @@ local function select_theme(default_light, default_dark)
 end
 
 return {
-  { "nordtheme/vim", "NLKNguyen/papercolor-theme", "AlexvZyl/nordic.nvim" },
+  { "nordtheme/vim", "NLKNguyen/papercolor-theme", "AlexvZyl/nordic.nvim", "ishan9299/nvim-solarized-lua" },
 
   {
     "LazyVim/LazyVim",
