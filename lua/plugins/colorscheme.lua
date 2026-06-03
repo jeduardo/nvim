@@ -1,4 +1,4 @@
-local BUF_SIZE = 4096 -- do not read more than this
+local BUF_SIZE = 4096
 
 local function isPatternMatch(str, pattern)
   if str == nil or pattern == nil then
@@ -47,6 +47,19 @@ local function is_dark()
     end
   end
 
+  -- Read from dark-notify cache (written by LaunchAgent, no subprocess needed)
+  local home = os.getenv("HOME") or ""
+  local cache_home = os.getenv("XDG_CACHE_HOME") or (home .. "/.cache")
+  local cache_file = io.open(cache_home .. "/dark_mode", "r")
+  if cache_file then
+    local val = cache_file:read(16)
+    cache_file:close()
+    if val ~= nil then
+      return val:match("^true") ~= nil
+    end
+  end
+
+  -- Fallback: detect from OS when cache is not yet populated
   local osname = vim.loop.os_uname().sysname
 
   if osname:match("Linux") and is_android() then
@@ -76,7 +89,6 @@ local function is_dark()
 end
 
 local function select_theme(default_light, default_dark)
-  -- Check for overrides
   local env_light = os.getenv("NVIM_LIGHT_THEME")
   local env_dark = os.getenv("NVIM_DARK_THEME")
 
@@ -99,5 +111,20 @@ return {
     opts = {
       colorscheme = select_theme("PaperColor", "nord"),
     },
+  },
+
+  {
+    "cormacrelf/dark-notify",
+    config = function()
+      require("dark_notify").run({
+        schemes = {
+          dark = os.getenv("NVIM_DARK_THEME") or "nord",
+          light = os.getenv("NVIM_LIGHT_THEME") or "PaperColor",
+        },
+        onchange = function(mode)
+          vim.o.background = mode == "dark" and "dark" or "light"
+        end,
+      })
+    end,
   },
 }
