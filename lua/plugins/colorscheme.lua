@@ -1,6 +1,8 @@
 local BUF_SIZE = 4096 -- do not read more than this
-local LIGHT_THEME = "nord-light"
-local DARK_THEME = "nord-dark"
+-- local LIGHT_THEME = "nord-light"
+-- local DARK_THEME = "nord-dark"
+local LIGHT_THEME = "tokyonight-day"
+local DARK_THEME = "tokyonight-storm"
 local THEME_POLL_INTERVAL_MS = 5000
 local uv = vim.uv or vim.loop
 local theme_timer
@@ -142,6 +144,8 @@ end
 setup_os_theme_switching()
 
 return {
+  --[[
+  Nord configuration retained for reference.
   {
     "dupeiran001/nord.nvim",
     lazy = false,
@@ -236,7 +240,20 @@ return {
       end,
     },
   },
-  { "NLKNguyen/papercolor-theme", "AlexvZyl/nordic.nvim", "ishan9299/nvim-solarized-lua" },
+  { "AlexvZyl/nordic.nvim" },
+  --]]
+
+  {
+    "folke/tokyonight.nvim",
+    lazy = false,
+    priority = 1000,
+    opts = {
+      style = "storm",
+      light_style = "day",
+    },
+  },
+  { "NLKNguyen/papercolor-theme" },
+  { "ishan9299/nvim-solarized-lua" },
 
   {
     "LazyVim/LazyVim",
